@@ -80,3 +80,18 @@ async function addMessage(author, message) {
   }
                                                  }
                                                  
+const newPostForm = document.getElementById('new-post');
+
+newPostForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  const author = event.target.author.value;
+  const message = event.target.message.value;
+
+  const url = new URL(window.location.href);
+  url.searchParams.set('author', author);
+  url.searchParams.set('message', message);
+
+  window.location.href = url.toString();
+});
+                                                 
