@@ -1,107 +1,84 @@
+<!DOCTYPE html>
 <html>
 <head>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <style>
-    #container {
-      width: 500px;
-      margin: auto;
-    }
-    #post {
-      border: 1px solid #ccc;
-      padding: 10px;
-    }
-    #post img {
-      max-width: 100%;
-    }
-    #error {
-      color: red;
-    }
-  </style>
+    <title>Случайный пост с телеграм-канала</title>
+    <!-- Подключаем библиотеку requests для отправки HTTP-запросов -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/requests/2.88.0/requests.min.js"></script>
+    <!-- Подключаем библиотеку jQuery для упрощения работы с DOM -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Задаем стиль веб-страницы с помощью CSS -->
+    <style>
+        body {
+            background-color: lightblue; /* Цвет фона */
+            font-family: Arial, sans-serif; /* Шрифт текста */
+        }
+        h1 {
+            text-align: center; /* Выравнивание заголовка по центру */
+            color: white; /* Цвет заголовка */
+        }
+        #post {
+            margin: 20px auto; /* Отступы по краям и по центру */
+            width: 80%; /* Ширина блока с постом */
+            border: 2px solid black; /* Граница блока с постом */
+            padding: 10px; /* Поля внутри блока с постом */
+            background-color: white; /* Цвет фона блока с постом */
+            font-size: 18px; /* Размер шрифта текста поста */
+        }
+        #button {
+            display: block; /* Отображение кнопки как блочного элемента */
+            margin: 10px auto; /* Отступы по краям и по центру */
+            width: 200px; /* Ширина кнопки */
+            height: 50px; /* Высота кнопки */
+            background-color: green; /* Цвет фона кнопки */
+            color: white; /* Цвет текста кнопки */
+            font-size: 20px; /* Размер шрифта текста кнопки */
+            border: none; /* Отключение границы кнопки */
+            cursor: pointer; /* Изменение курсора на указатель при наведении на кнопку */
+        }
+    </style>
 </head>
 <body>
-  <div id="container">
-    <h1>Случайный пост с инстаграма</h1>
-    <button id="generate">Сгенерировать</button>
+    <h1>Случайный пост с телеграм-канала @komaru_World</h1>
+    <!-- Создаем блок с id="post", в котором будет отображаться пост -->
     <div id="post"></div>
-    <div id="error"></div>
-  </div>
-  <script>
-    // Замените эту переменную на имя пользователя, чей канал вы хотите использовать
-    var username = "mugimeshi323";
+    <!-- Создаем кнопку с id="button", которая будет запускать функцию getPost при нажатии -->
+    <button id="button" onclick="getPost()">Получить пост</button>
+    <!-- Создаем скрипт на языке JavaScript, который будет выполнять логику сайта -->
+    <script>
+        // Получаем токен бота и ID канала
+        var bot_token = "7136932957:AAH0KoDyAbOmuz-GVWSSmTxGej7XXB2Rjew"; // Замените на свой токен бота
+        var channel_id = "@komaru_World";
 
-    // Функция для получения всех ID постов с канала
-    function get_posts(username, callback) {
-      // Используем API инстаграма для получения информации о пользователе
-      var url = "https://www.instagram.com/" + username + "/?__a=1";
-      $.ajax({
-        url: url,
-        dataType: "json",
-        success: function(data) {
-          // Получаем массив постов пользователя
-          var posts = data.graphql.user.edge_owner_to_timeline_media.edges;
-          // Создаем пустой массив для хранения ID постов
-          var ids = [];
-          // Проходим по каждому посту и добавляем его ID в массив
-          for (var i = 0; i < posts.length; i++) {
-            var id = posts[i].node.shortcode;
-            ids.push(id);
-          }
-          // Вызываем callback-функцию с массивом ID постов
-          callback(ids);
-        },
-        error: function() {
-          // Показываем сообщение об ошибке
-          $("#error").text("Не удалось получить данные с инстаграма. Пожалуйста, попробуйте позже.");
+        // Создаем функцию getPost, которая будет получать случайный пост с канала
+        function getPost() {
+            // Создаем URL для запроса к API Telegram с помощью метода getUpdates
+            var url = "https://api.telegram.org/bot" + bot_token + "/getUpdates?chat_id=" + channel_id;
+            // Отправляем GET-запрос к API Telegram с помощью библиотеки requests
+            requests.get(url, function(error, response, body) {
+                // Проверяем, есть ли ошибка или нет
+                if (error) {
+                    // Если есть ошибка, выводим ее в консоль
+                    console.error(error);
+                } else {
+                    // Если нет ошибки, парсим ответ в формате JSON
+                    var data = JSON.parse(body);
+                    // Получаем список всех постов с канала
+                    var posts = data.result;
+                    // Получаем количество постов в списке
+                    var count = posts.length;
+                    // Генерируем случайный индекс в диапазоне от 0 до count - 1
+                    var index = Math.floor(Math.random() * count);
+                    // Получаем пост по случайному индексу
+                    var post = posts[index];
+                    // Получаем текст поста
+                    var text = post.message.text;
+                    // Находим элемент с id="post" в DOM
+                    var element = document.getElementById("post");
+                    // Заменяем содержимое элемента на текст поста
+                    element.innerHTML = text;
+                }
+            });
         }
-      });
-    }
-
-    // Функция для получения случайного элемента из массива
-    function random_item(items) {
-      return items[Math.floor(Math.random() * items.length)];
-    }
-
-    // Функция для получения данных поста по его ID
-    function get_post(id) {
-      // Используем API инстаграма для получения информации о посте
-      var url = "https://www.instagram.com/p/" + id + "/?__a=1";
-      $.ajax({
-        url: url,
-        dataType: "json",
-        success: function(data) {
-          // Получаем данные о посте
-          var post = data.graphql.shortcode_media;
-          // Получаем URL изображения
-          var image = post.display_url;
-          // Получаем текст поста
-          var text = post.edge_media_to_caption.edges[0].node.text;
-          // Создаем HTML-код для отображения поста
-          var html = "<img src='" + image + "'><p>" + text + "</p>";
-          // Вставляем HTML-код в элемент с id="post"
-          $("#post").html(html);
-          // Очищаем сообщение об ошибке
-          $("#error").text("");
-        },
-        error: function() {
-          // Показываем сообщение об ошибке
-          $("#error").text("Не удалось получить данные о посте. Пожалуйста, попробуйте позже.");
-        }
-      });
-    }
-
-    // Функция для генерации случайного поста
-    function generate_post() {
-      // Получаем все ID постов с канала
-      get_posts(username, function(ids) {
-        // Получаем случайный ID поста из массива ids
-        var id = random_item(ids);
-        // Получаем и показываем пост по его ID
-        get_post(id);
-      });
-    }
-
-    // При нажатии на кнопку с id="generate" вызываем функцию generate_post
-    $("#generate").click(generate_post);
-  </script>
+    </script>
 </body>
 </html>
