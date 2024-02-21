@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -32,7 +32,12 @@
             });
 
             function getRandomInstagramPost(html) {
-                // ... (Вставьте код функции из Python) ...
+                const postElement = soup.find("div", class_="_aagcW");
+                const imageURL = postElement.find("img").get("src");
+                const caption = postElement.find("caption").text;
+
+                return `<a href="${imageURL}" target="_blank"><img src="${imageURL}"></a>
+                        <caption>${caption}</caption>`;
             }
         });
     </script>
