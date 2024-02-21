@@ -4,82 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Instagram Post</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .instagram-post {
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
-
-        .instagram-post img {
-            width: 100%;
-            height: auto;
-        }
-
-        .instagram-post caption {
-            font-size: 14px;
-            margin-top: 10px;
-        }
-    </style>
 </head>
 <body>
     <h1>Random Instagram Post from mugimeshi323</h1>
-    <div class="instagram-post">
-        </div>
+    <div id="post"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-        const instagramURL = "https://www.instagram.com/mugimeshi323/?hl=ru";
+        $(document).ready(function() {
+            const instagramURL = "https://www.instagram.com/mugimeshi323/?hl=ru";
 
-        axios.get(instagramURL)
-            .then(response => {
-                const html = response.data;
-                const post = getRandomInstagramPost(html);
+            $.ajax({
+                url: instagramURL,
+                success: function(response) {
+                    const html = response;
+                    const post = getRandomInstagramPost(html);
 
-                if (post) {
-                    const postElement = document.querySelector(".instagram-post");
-                    postElement.innerHTML = post;
-                } else {
-                    console.error("No Instagram post found.");
+                    if (post) {
+                        $("#post").html(post);
+                    } else {
+                        console.error("No Instagram post found.");
+                    }
+                },
+                error: function(error) {
+                    console.error("Error fetching Instagram post:", error);
                 }
-            })
-            .catch(error => {
-                console.error("Error fetching Instagram post:", error);
             });
 
-        function getRandomInstagramPost(html) {
-            // This function is a simplified example and might not work perfectly with all Instagram embeds.
-            // You can improve it by using a more robust parsing library or regular expressions.
-
-            const regex = /<script type="text\/javascript">(.*?)<\/script>/g;
-            const matches = html.match(regex);
-
-            if (matches) {
-                for (const match of matches) {
-                    if (match.includes('window._sharedData')) {
-                        const data = JSON.parse(match.replace(/<script type="text\/javascript">window._sharedData = (.*?)<\/script>/, '$1'));
-                        const entry = data.entry_data.ProfilePage[0].graphql.user.edge_owner_to_timeline_media.edges[Math.floor(Math.random() * data.entry_data.ProfilePage[0].graphql.user.edge_owner_to_timeline_media.edges.length)];
-
-                        if (entry) {
-                            const shortcode = entry.node.shortcode;
-                            const url = `https://www.instagram.com/p/${shortcode}/`;
-                            const caption = entry.node.edge_media_to_caption.edges[0].node.text;
-
-                            return `<a href="${url}" target="_blank"><img src="${entry.node.display_url}"></a>
-                                    <caption>${caption}</caption>`;
-                        }
-                    }
-                }
+            function getRandomInstagramPost(html) {
+                // ... (Вставьте код функции из Python) ...
             }
-
-            return null;
-        }
+        });
     </script>
 </body>
 </html>
