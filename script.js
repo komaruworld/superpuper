@@ -73,3 +73,11 @@ getLastPost()
     .catch((error) => {
         console.error(error);
         document.getElementById("last-
+    });
+
+// Отображение последнего поста
+getLastPost()
+    .then((post) => showPost(post, document.getElementById("last-post")))
+    .catch((error) => {
+        console.error(error);
+        document.getElementById("last-
