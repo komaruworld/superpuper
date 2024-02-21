@@ -68,4 +68,9 @@ function showPost(post) {
 
 getRandomPost()
     .then((postNumber) => getPostInfo(postNumber))
-    .then((post) => showPost(post));
+    .then((post) => showPost(post))
+    .catch((error) => {
+        console.error(error);
+        postElement.innerHTML = `<p>Ошибка: ${error.message}</p>`;
+    });
+
