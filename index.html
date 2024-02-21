@@ -1,45 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Instagram Post</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    #container {
+      width: 500px;
+      margin: auto;
+    }
+    #post {
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+    #post img {
+      max-width: 100%;
+    }
+  </style>
 </head>
 <body>
-    <h1>Random Instagram Post from mugimeshi323</h1>
+  <div id="container">
+    <h1>Случайный пост с инстаграма</h1>
+    <button id="generate">Сгенерировать</button>
     <div id="post"></div>
+  </div>
+  <script>
+    // Замените эту переменную на имя пользователя, чей канал вы хотите использовать
+    var username = "mugimeshi323";
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            const instagramURL = "https://www.instagram.com/mugimeshi323/?hl=ru";
+    // Функция для получения всех ID постов с канала
+    function get_posts(username) {
+      // Используем API инстаграма для получения информации о пользователе
+      var url = "https://www.instagram.com/" + username + "/?__a=1";
+      $.ajax({
+        url: url,
+        dataType: "json",
+        success: function(data) {
+          // Получаем массив постов пользователя
+          var posts = data.graphql.user.edge_owner_to_timeline_media.edges;
+          // Создаем пустой массив для хранения ID постов
+          var ids = [];
+          // Проходим по каждому посту и добавляем его ID в массив
+          for (var i = 0; i < posts.length; i++) {
+            var id = posts[i].node.shortcode;
+            ids.push(id);
+          }
+          // Возвращаем массив ID постов
+          return ids;
+        }
+      });
+    }
 
-            $.ajax({
-                url: instagramURL,
-                success: function(response) {
-                    const html = response;
-                    const post = getRandomInstagramPost(html);
+    // Функция для получения случайного элемента из массива
+    function random_item(items) {
+      return items[Math.floor(Math.random() * items.length)];
+    }
 
-                    if (post) {
-                        $("#post").html(post);
-                    } else {
-                        console.error("No Instagram post found.");
-                    }
-                },
-                error: function(error) {
-                    console.error("Error fetching Instagram post:", error);
-                }
-            });
+    // Функция для получения данных поста по его ID
+    function get_post(id) {
+      // Используем API инстаграма для получения информации о посте
+      var url = "https://www.instagram.com/p/" + id + "/?__a=1";
+      $.ajax({
+        url: url,
+        dataType: "json",
+        success: function(data) {
+          // Получаем данные о посте
+          var post = data.graphql.shortcode_media;
+          // Получаем URL изображения
+          var image = post.display_url;
+          // Получаем текст поста
+          var text = post.edge_media_to_caption.edges[0].node.text;
+          // Создаем HTML-код для отображения поста
+          var html = "<img src='" + image + "'><p>" + text + "</p>";
+          // Вставляем HTML-код в элемент с id="post"
+          $("#post").html(html);
+        }
+      });
+    }
 
-            function getRandomInstagramPost(html) {
-                const postElement = soup.find("div", class_="_aagcW");
-                const imageURL = postElement.find("img").get("src");
-                const caption = postElement.find("caption").text;
+    // Функция для генерации случайного поста
+    function generate_post() {
+      // Получаем все ID постов с канала
+      var ids = get_posts(username);
+      // Получаем случайный ID поста из массива ids
+      var id = random_item(ids);
+      // Получаем и показываем пост по его ID
+      get_post(id);
+    }
 
-                return `<a href="${imageURL}" target="_blank"><img src="${imageURL}"></a>
-                        <caption>${caption}</caption>`;
-            }
-        });
-    </script>
+    // При нажатии на кнопку с id="generate" вызываем функцию generate_post
+    $("#generate").click(generate_post);
+  </script>
 </body>
 </html>
