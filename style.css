@@ -1,10 +1,27 @@
-#post {
+#game {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ccc;
 }
 
-#post-title {
+#click-button {
     font-size: 18px;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+#score, #level {
     margin-bottom: 10px;
+}
+
+#image-gallery {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#image-gallery img {
+    max-width: 100px;
+    margin: 5px;
+}
