@@ -1,140 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Случайный пост с телеграм-канала</title>
-    <!-- Подключаем библиотеку requests для отправки HTTP-запросов -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/requests/2.88.0/requests.min.js"></script>
-    <!-- Подключаем библиотеку jQuery для упрощения работы с DOM -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Задаем стиль веб-страницы с помощью CSS -->
-    <style>
-        body {
-            background-color: lightblue; /* Цвет фона */
-            font-family: Arial, sans-serif; /* Шрифт текста */
-        }
-        h1 {
-            text-align: center; /* Выравнивание заголовка по центру */
-            color: white; /* Цвет заголовка */
-        }
-        #post {
-            margin: 20px auto; /* Отступы по краям и по центру */
-            width: 80%; /* Ширина блока с постом */
-            border: 2px solid black; /* Граница блока с постом */
-            padding: 10px; /* Поля внутри блока с постом */
-            background-color: white; /* Цвет фона блока с постом */
-            font-size: 18px; /* Размер шрифта текста поста */
-        }
-        #button {
-            display: block; /* Отображение кнопки как блочного элемента */
-            margin: 10px auto; /* Отступы по краям и по центру */
-            width: 200px; /* Ширина кнопки */
-            height: 50px; /* Высота кнопки */
-            background-color: green; /* Цвет фона кнопки */
-            color: white; /* Цвет текста кнопки */
-            font-size: 20px; /* Размер шрифта текста кнопки */
-            border: none; /* Отключение границы кнопки */
-            cursor: pointer; /* Изменение курсора на указатель при наведении на кнопку */
-        }
-    </style>
+  <title>Случайный пост с Инстаграма</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Подключаем Bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Подключаем свои стили CSS -->
+  <style>
+    /* Здесь ты можешь добавить свои стили */
+  </style>
 </head>
 <body>
-    <h1>Случайный пост с телеграм-канала @komaru_World</h1>
-    <!-- Создаем блок с id="post", в котором будет отображаться пост -->
-    <div id="post"></div>
-    <!-- Создаем кнопку с id="button", которая будет запускать функцию getPost при нажатии -->
-    <button id="button" onclick="getPost()">Получить пост</button>
-    <!-- Создаем скрипт на языке JavaScript, который будет выполнять логику сайта -->
-    <script>
-        // Получаем токен бота и ID канала
-        var bot_token = "7136932957:AAH0KoDyAbOmuz-GVWSSmTxGej7XXB2Rjew"; // Замените на свой токен бота
-        var channel_id = "@komaru_World";
-
-        // Создаем функцию getPost, которая будет получать случайный пост с канала
-        function getPost() {
-            // Создаем URL для запроса к API Telegram с помощью метода getUpdates
-            var url = "https://api.telegram.org/bot" + bot_token + "/getUpdates?chat_id=" + channel_id;
-            // Отправляем GET-запрос к API Telegram с помощью библиотеки requests
-            requests.get(url, function(error, response, body) {
-                // Проверяем, есть ли ошибка или нет
-                if (error) {
-                    // Если есть ошибка, выводим ее в консоль
-                    console.error(error);
-                } else {
-                    // Если нет ошибки, парсим ответ в формате JSON
-                    var data = JSON.parse(body);
-                    // Получаем список всех постов с канала
-                    var posts = data.result;
-                    // Получаем количество постов в списке
-                    var count = posts.length;
-                    // Генерируем случайный индекс в диапазоне от 0 до count - 1
-                    var index = Math.floor(Math.random() * count);
-                    // Получаем пост по случайному индексу
-                    var post = posts[index];
-                    // Получаем текст поста
-                    var text = post.message.text;
-                    // Находим элемент с id="post" в DOM
-                    var element = document.getElementById("post");
-                    // Заменяем содержимое элемента на текст поста
-                    element.innerHTML = text;
-                }
-            });
-        }
-    </script>
+  <!-- Заголовок сайта -->
+  <div class="header">
+    <h1>Случайный пост с Инстаграма</h1>
+    <p>Сайт, созданный мной с помощью Copilot.</p>
+  </div>
+  <!-- Навигационная панель -->
+  <div class="navbar">
+    <a href="#">Главная</a>
+    <a href="#">О сайте</a>
+    <a href="#">Контакты</a>
+    <a href="#" class="right">Войти</a>
+  </div>
+  <!-- Основное содержимое -->
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <!-- Здесь будет показан случайный пост с Инстаграма -->
+        <div id="instagram-post"></div>
+      </div>
+      <div class="col-md-4">
+        <!-- Здесь ты можешь добавить что-то еще, например, рекламу или новости -->
+      </div>
+    </div>
+  </div>
+  <!-- Подвал сайта -->
+  <div class="footer">
+    <p>© 2024 Все права защищены.</p>
+  </div>
+  <!-- Подключаем jQuery и Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Подключаем свой скрипт Java -->
+  <script src="script.js"></script>
 </body>
 </html>
-<script>
-    // Получаем токен бота и ID канала
-    var bot_token = "в"; // Замените на свой токен бота
-    var channel_id = "@komaru_World";
-
-    // Создаем функцию getPost, которая будет получать случайный пост с канала
-    function getPost() {
-        // Создаем URL для запроса к API Telegram с помощью метода getUpdates
-        var url = "https://api.telegram.org/bot" + bot_token + "/getUpdates?chat_id=" + channel_id;
-        // Отправляем GET-запрос к API Telegram с помощью библиотеки requests
-        requests.get(url, function(error, response, body) {
-            // Проверяем, есть ли ошибка или нет
-            if (error) {
-                // Если есть ошибка, выводим ее в консоль
-                console.error(error);
-            } else {
-                // Если нет ошибки, парсим ответ в формате JSON
-                var data = JSON.parse(body);
-                // Получаем список всех постов с канала
-                var posts = data.result;
-                // Получаем количество постов в списке
-                var count = posts.length;
-                // Генерируем случайный индекс в диапазоне от 0 до count - 1
-                var index = Math.floor(Math.random() * count);
-                // Получаем пост по случайному индексу
-                var post = posts[index];
-                // Получаем текст поста
-                var text = post.message.text;
-                // Получаем ID и тип файла поста
-                var file_id = post.message.photo[0].file_id;
-                var file_type = post.message.photo[0].mime_type;
-                // Создаем URL для запроса к API Telegram с помощью метода getFile
-                var file_url = "https://api.telegram.org/bot" + bot_token + "/getFile?file_id=" + file_id;
-                // Отправляем GET-запрос к API Telegram с помощью библиотеки requests
-                requests.get(file_url, function(error, response, body) {
-                    // Проверяем, есть ли ошибка или нет
-                    if (error) {
-                        // Если есть ошибка, выводим ее в консоль
-                        console.error(error);
-                    } else {
-                        // Если нет ошибки, парсим ответ в формате JSON
-                        var file_data = JSON.parse(body);
-                        // Получаем URL файла из объекта File
-                        var file_path = file_data.result.file_path;
-                        // Составляем полный URL файла, добавляя базовый URL API Telegram
-                        var image_url = "https://api.telegram.org/file/bot" + bot_token + "/" + file_path;
-                        // Находим элемент с id="post" в DOM
-                        var element = document.getElementById("post");
-                        // Заменяем содержимое элемента на текст и картинку поста
-                        element.innerHTML = text + "<br><img src=\"" + image_url + "\" alt=\"картинка\">";
-                    }
-                });
-            }
-        });
-    }
-</script>
