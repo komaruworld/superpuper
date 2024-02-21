@@ -1,1 +1,57 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+#wall {
+  border: 1px solid #ccc;
+  padding: 20px;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.post {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.author {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.author span {
+  color: #000;
+}
+
+.message {
+  margin-top: 5px;
+}
+
+#new-post {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#new-post input,
+#new-post textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+#new-post button {
+  cursor: pointer;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
 
