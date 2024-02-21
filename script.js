@@ -62,3 +62,21 @@ const addPost = (author, message) => {
   authorElement.classList.add('author');
   authorElement.innerHTML = `<p>**Ник:** <span>${author
                                                  
+async function addMessage(author, message) {
+  const response = await fetch('/api/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ author, message }),
+  });
+
+  if (response.ok) {
+    // Сообщение успешно добавлено
+    // ... код для добавления сообщения на "стену" ...
+  } else {
+    // Ошибка при добавлении сообщения
+    // ... обработать ошибку ...
+  }
+                                                 }
+                                                 
