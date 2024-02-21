@@ -1,61 +1,75 @@
-const channelUrl = "https://t.me/komaru_world";
-const images = []; // Массив ссылок на изображения
+const instagramUrl = "https://www.instagram.com/mugimeshi323/?hl=ru";
 
-// Функция для получения случайного изображения
-function getRandomImage() {
-    return images[Math.floor(Math.random() * images.length)];
-}
-
-// Функция для обновления интерфейса
-function updateUI() {
-    document.getElementById("score").textContent = `Очки: ${score}`;
-    document.getElementById("level").textContent = `Уровень: ${level}`;
-}
-
-// Обработчик события нажатия кнопки
-document.getElementById("click-button").addEventListener("click", () => {
-    // Увеличение очков
-    score += level;
-
-    // Увеличение уровня
-    if (score >= level * 100) {
-        level++;
-    }
-
-    // Отображение случайного изображения
-    const imageElement = document.createElement("img");
-    imageElement.src = getRandomImage();
-    document.getElementById("image-gallery").appendChild(imageElement);
-
-    // Обновление интерфейса
-    updateUI();
-});
-
-// Загрузка изображений
-fetch(`${channelUrl}/messages.json`)
-    .then((response) => response.json())
-    .then((data) => {
-        for (const message of data["result"]["messages"]) {
-            if ("photo" in message["media"]) {
-                images.push(message["media"]["photo"]["sizes"][-1]["url"]);
+// Функция для получения случайного поста
+function getRandomPost() {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", `${instagramUrl}/feed/json/`);
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                const posts = data["items"];
+                const randomPost = posts[Math.floor(Math.random() * posts.length)];
+                resolve(randomPost);
+            } else {
+                reject(new Error(`Ошибка получения данных: ${xhr.status}`));
             }
-        }
+        };
+        xhr.onerror = () => {
+            reject(new Error("Ошибка соединения"));
+        };
+        xhr.send();
+    });
+}
+
+// Функция для получения последнего поста
+function getLastPost() {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", `${instagramUrl}/feed/json/`);
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                const posts = data["items"];
+                const lastPost = posts[0];
+                resolve(lastPost);
+            } else {
+                reject(new Error(`Ошибка получения данных: ${xhr.status}`));
+            }
+        };
+        xhr.onerror = () => {
+            reject(new Error("Ошибка соединения"));
+        };
+        xhr.send();
+    });
+}
+
+// Функция для отображения поста
+function showPost(post, element) {
+    element.innerHTML = "";
+
+    const imgElement = document.createElement("img");
+    imgElement.src = post["image_versions2"]["candidates"][0]["url"];
+    element.appendChild(imgElement);
+
+    if ("caption" in post) {
+        const captionElement = document.createElement("p");
+        captionElement.textContent = post["caption"]["text"];
+        element.appendChild(captionElement);
+    }
+}
+
+// Отображение случайного поста
+getRandomPost()
+    .then((post) => showPost(post, document.getElementById("random-post")))
+    .catch((error) => {
+        console.error(error);
+        document.getElementById("random-post").innerHTML = `<p>Ошибка: ${error.message}</p>`;
     });
 
-// Получение сохраненного прогресса
-const savedScore = localStorage.getItem("score");
-const savedLevel = localStorage.getItem("level");
-
-if (savedScore && savedLevel) {
-    score = parseInt(savedScore);
-    level = parseInt(savedLevel);
-}
-
-// Обновление интерфейса
-updateUI();
-
-// Сохранение прогресса
-setInterval(() => {
-    localStorage.setItem("score", score);
-    localStorage.setItem("level", level);
-}, 1000);
+// Отображение последнего поста
+getLastPost()
+    .then((post) => showPost(post, document.getElementById("last-post")))
+    .catch((error) => {
+        console.error(error);
+        document.getElementById("last-
