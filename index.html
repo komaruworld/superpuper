@@ -1,49 +1,19 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <title>Случайный пост с Инстаграма</title>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Подключаем Bootstrap -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- Подключаем свои стили CSS -->
-  <style>
-    /* Здесь ты можешь добавить свои стили */
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Моя Стена</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Заголовок сайта -->
-  <div class="header">
-    <h1>Случайный пост с Инстаграма</h1>
-    <p>Сайт, созданный мной с помощью Copilot.</p>
-  </div>
-  <!-- Навигационная панель -->
-  <div class="navbar">
-    <a href="#">Главная</a>
-    <a href="#">О сайте</a>
-    <a href="#">Контакты</a>
-    <a href="#" class="right">Войти</a>
-  </div>
-  <!-- Основное содержимое -->
-  <div class="container">
-    <div class="row">
-      <div class="col-md-8">
-        <!-- Здесь будет показан случайный пост с Инстаграма -->
-        <div id="instagram-post"></div>
-      </div>
-      <div class="col-md-4">
-        <!-- Здесь ты можешь добавить что-то еще, например, рекламу или новости -->
-      </div>
+  <div id="wall">
     </div>
-  </div>
-  <!-- Подвал сайта -->
-  <div class="footer">
-    <p>© 2024 Все права защищены.</p>
-  </div>
-  <!-- Подключаем jQuery и Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <!-- Подключаем свой скрипт Java -->
+  <form id="new-post">
+    <input type="text" name="author" placeholder="Ваш ник">
+    <textarea name="message" placeholder="Ваше сообщение"></textarea>
+    <button type="submit">Отправить</button>
+  </form>
   <script src="script.js"></script>
 </body>
 </html>
