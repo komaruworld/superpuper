@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Кликер Komaru World</title>
+    <title>Рандомный и последний посты из Instagram</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="game">
-        <h1>Кликер Komaru World</h1>
-        <button id="click-button">Нажми меня!</button>
-        <p id="score">Очки: 0</p>
-        <p id="level">Уровень: 1</p>
-        <div id="image-gallery"></div>
+    <div class="container">
+        <div class="column left">
+            <h2>Случайный пост</h2>
+            <div id="random-post"></div>
+        </div>
+        <div class="column right">
+            <h2>Последний пост</h2>
+            <div id="last-post"></div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
 </html>
+
