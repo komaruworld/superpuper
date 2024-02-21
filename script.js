@@ -1,76 +1,61 @@
 const channelUrl = "https://t.me/komaru_world";
+const images = []; // Массив ссылок на изображения
 
-const postElement = document.getElementById("post");
-const postTitleElement = document.getElementById("post-title");
-const postTextElement = document.getElementById("post-text");
-const postImageElement = document.getElementById("post-image");
-const postHashtagsElement = document.getElementById("post-hashtags");
-const postLinkElement = document.getElementById("post-link");
-
-function getRandomPost() {
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", `${channelUrl}/messages.json`);
-        xhr.onload = () => {
-            if (xhr.status === 200) {
-                const data = JSON.parse(xhr.responseText);
-                const totalPosts = data["result"]["total_count"];
-                const randomPostNumber = Math.floor(Math.random() * totalPosts) + 1;
-                resolve(randomPostNumber);
-            } else {
-                reject(new Error(`Ошибка получения данных: ${xhr.status}`));
-            }
-        };
-        xhr.onerror = () => {
-            reject(new Error("Ошибка соединения"));
-        };
-        xhr.send();
-    });
+// Функция для получения случайного изображения
+function getRandomImage() {
+    return images[Math.floor(Math.random() * images.length)];
 }
 
-function getPostInfo(postNumber) {
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", `${channelUrl}/messages/${postNumber}`);
-        xhr.onload = () => {
-            if (xhr.status === 200) {
-                const data = JSON.parse(xhr.responseText);
-                const post = data["result"]["message"];
-                resolve(post);
-            } else {
-                reject(new Error(`Ошибка получения данных: ${xhr.status}`));
-            }
-        };
-        xhr.onerror = () => {
-            reject(new Error("Ошибка соединения"));
-        };
-        xhr.send();
-    });
+// Функция для обновления интерфейса
+function updateUI() {
+    document.getElementById("score").textContent = `Очки: ${score}`;
+    document.getElementById("level").textContent = `Уровень: ${level}`;
 }
 
-function showPost(post) {
-    postTitleElement.textContent = post["text"].slice(0, 30) + "...";
-    postTextElement.textContent = post["text"];
-    if ("photo" in post["media"]) {
-        postImageElement.src = post["media"]["photo"]["sizes"][-1]["url"];
-        postImageElement.style.display = "block";
-    } else {
-        postImageElement.style.display = "none";
+// Обработчик события нажатия кнопки
+document.getElementById("click-button").addEventListener("click", () => {
+    // Увеличение очков
+    score += level;
+
+    // Увеличение уровня
+    if (score >= level * 100) {
+        level++;
     }
-    postHashtagsElement.innerHTML = "";
-    for (const hashtag of post["entities"]["hashtags"]) {
-        const hashtagElement = document.createElement("li");
-        hashtagElement.textContent = `#${hashtag["text"]}`;
-        postHashtagsElement.appendChild(hashtagElement);
-    }
-    postLinkElement.href = `${channelUrl}/${post["id"]}`;
-}
 
-getRandomPost()
-    .then((postNumber) => getPostInfo(postNumber))
-    .then((post) => showPost(post))
-    .catch((error) => {
-        console.error(error);
-        postElement.innerHTML = `<p>Ошибка: ${error.message}</p>`;
+    // Отображение случайного изображения
+    const imageElement = document.createElement("img");
+    imageElement.src = getRandomImage();
+    document.getElementById("image-gallery").appendChild(imageElement);
+
+    // Обновление интерфейса
+    updateUI();
+});
+
+// Загрузка изображений
+fetch(`${channelUrl}/messages.json`)
+    .then((response) => response.json())
+    .then((data) => {
+        for (const message of data["result"]["messages"]) {
+            if ("photo" in message["media"]) {
+                images.push(message["media"]["photo"]["sizes"][-1]["url"]);
+            }
+        }
     });
 
+// Получение сохраненного прогресса
+const savedScore = localStorage.getItem("score");
+const savedLevel = localStorage.getItem("level");
+
+if (savedScore && savedLevel) {
+    score = parseInt(savedScore);
+    level = parseInt(savedLevel);
+}
+
+// Обновление интерфейса
+updateUI();
+
+// Сохранение прогресса
+setInterval(() => {
+    localStorage.setItem("score", score);
+    localStorage.setItem("level", level);
+}, 1000);
