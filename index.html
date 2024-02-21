@@ -13,6 +13,9 @@
     #post img {
       max-width: 100%;
     }
+    #error {
+      color: red;
+    }
   </style>
 </head>
 <body>
@@ -20,13 +23,14 @@
     <h1>Случайный пост с инстаграма</h1>
     <button id="generate">Сгенерировать</button>
     <div id="post"></div>
+    <div id="error"></div>
   </div>
   <script>
     // Замените эту переменную на имя пользователя, чей канал вы хотите использовать
-    var username = "mugimeshi323";
+    var username = "ваше имя пользователя";
 
     // Функция для получения всех ID постов с канала
-    function get_posts(username) {
+    function get_posts(username, callback) {
       // Используем API инстаграма для получения информации о пользователе
       var url = "https://www.instagram.com/" + username + "/?__a=1";
       $.ajax({
@@ -42,8 +46,12 @@
             var id = posts[i].node.shortcode;
             ids.push(id);
           }
-          // Возвращаем массив ID постов
-          return ids;
+          // Вызываем callback-функцию с массивом ID постов
+          callback(ids);
+        },
+        error: function() {
+          // Показываем сообщение об ошибке
+          $("#error").text("Не удалось получить данные с инстаграма. Пожалуйста, попробуйте позже.");
         }
       });
     }
@@ -71,6 +79,12 @@
           var html = "<img src='" + image + "'><p>" + text + "</p>";
           // Вставляем HTML-код в элемент с id="post"
           $("#post").html(html);
+          // Очищаем сообщение об ошибке
+          $("#error").text("");
+        },
+        error: function() {
+          // Показываем сообщение об ошибке
+          $("#error").text("Не удалось получить данные о посте. Пожалуйста, попробуйте позже.");
         }
       });
     }
@@ -78,11 +92,12 @@
     // Функция для генерации случайного поста
     function generate_post() {
       // Получаем все ID постов с канала
-      var ids = get_posts(username);
-      // Получаем случайный ID поста из массива ids
-      var id = random_item(ids);
-      // Получаем и показываем пост по его ID
-      get_post(id);
+      get_posts(username, function(ids) {
+        // Получаем случайный ID поста из массива ids
+        var id = random_item(ids);
+        // Получаем и показываем пост по его ID
+        get_post(id);
+      });
     }
 
     // При нажатии на кнопку с id="generate" вызываем функцию generate_post
